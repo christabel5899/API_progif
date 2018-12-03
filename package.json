@@ -5,7 +5,7 @@
   "main": "init.js",
   "scripts": {
     "test": "echo test",
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "keywords": [
     "api"
