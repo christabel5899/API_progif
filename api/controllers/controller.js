@@ -4,21 +4,23 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
 exports.search = function(req, res) {
-  MongoClient.connect(url, function(err, client) {
+
+  MongoClient.connect(url, async function(err, client) {
+
+    async function getResults(Recipes, query) {
+      var results = await Recipes.find({$text: {$search : query}}); 
+      return await results.toArray();
+    }
     console.log("Connected succesfully to server");
     var db = client.db('api_abel');
     var Recipes = db.collection('Recipes');
-    console.log(req.query.q);
     var query = req.query.q;
-    var result = Recipes.find({$text: {$search : query}});
-    var resArray = [];
-    while(result.hasNext()){
-      resArray.push(JSON.stringify(result.next()));
-    }
-      
+    var resArray = await getResults(Recipes, query);
     
-    console.log(resArray);
-    res.json(resArray);
+    
+    var jsonString = JSON.stringify(resArray);
+    var jsonObj = JSON.parse(jsonString);
+    res.send("<pre>" + JSON.stringify(jsonObj,null,2)+"</pre>");
     client.close();
   });
   
