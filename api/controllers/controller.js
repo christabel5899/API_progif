@@ -17,10 +17,7 @@ exports.search = function(req, res) {
     var query = req.query.q;
     var resArray = await getResults(Recipes, query);
     
-    
-    var jsonString = JSON.stringify(resArray);
-    var jsonObj = JSON.parse(jsonString);
-    res.send("<pre>" + JSON.stringify(jsonObj,null,2)+"</pre>");
+    res.json(resArray);
     client.close();
   });
   
